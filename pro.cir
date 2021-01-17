@@ -1,0 +1,127 @@
+Telescopic op-amp in subthreshold
+
+.lib ".\tsmc018.lib"
+
+**Circuit**
+
+Vdd 5 0 {vdd}
+
+*---Telescopic op-amp---
+
+M1 2a 1a 1 0 CMOSN W={w1} L={l}
+M2 2b 1b 1 0 CMOSN W={w1} L={l}
+M3 3a 2 2a 0 CMOSN W={w2} L={l}
+M4 3b 2 2b 0 CMOSN W={w2} L={l}
+M5 3a 3 4a 5 CMOSP W={w3} L={l}
+M6 3b 3 4b 5 CMOSP W={w3} L={l}
+M7 4a 4 5 5 CMOSP W={w4} L={l}
+M8 4b 4 5 5 CMOSP W={w4} L={l}
+M9 1 1g 0 0 CMOSN W={w0} L={l}
+
+*---Gain boost stage---
+
+M10 6a 3a 5 5 CMOSP W={w5} L={l}
+M11 6b 3b 5 5 CMOSP W={w5} L={l}
+M12 6a 1g 0 0 CMOSN W={w6} L={l}
+M13 6b 1g 0 0 CMOSN W={w6} L={l}
+
+*---Biasing circuit---
+
+M14 1g 1g 0 0 CMOSN W={w7} L={l}
+M15 2 2 1g 0 CMOSN W={w8} L={l}
+M16 3 3 4 5 CMOSP W={w9} L={l}
+M17 4 4 5 5 CMOSP W={w10} L={l}
+
+Iref 3 2 58.1671n
+
+*---External capacitors---
+
+CE1 3a 0 1f
+CE2 3b 0 1f
+CL1 6a 0 0.1f
+CL2 6b 0 0.1f
+Cc1 2a 6a 25f
+Cc2 2b 6b 25f
+
+*---Source voltages for different analysis types---
+
+Vin1 1a 0 ac sin(0.56 2m 10k)
+Vin2 0 1b ac sin(-0.56 2m 10k)
+*Vin1 1a 0 pulse(0 1 0.1m 1n 1n 5 5)
+*Vin2 1a 1b 0
+*Vin1 1a 0 0.56
+
+
+**Circuit**
+
+Vddx 5x 0 {vdd}
+
+*---Telescopic op-amp---
+
+M1x 2ax 1ax 1x 0 CMOSN W={w1} L={l}
+M2x 2bx 1bx 1x 0 CMOSN W={w1} L={l}
+M3x 3ax 2x 2ax 0 CMOSN W={w2} L={l}
+M4x 3bx 2x 2bx 0 CMOSN W={w2} L={l}
+M5x 3ax 3x 4ax 5x CMOSP W={w3} L={l}
+M6x 3bx 3x 4bx 5x CMOSP W={w3} L={l}
+M7x 4ax 4x 5x 5x CMOSP W={w4} L={l}
+M8x 4bx 4x 5x 5x CMOSP W={w4} L={l}
+M9x 1x 1gx 0 0 CMOSN W={w0} L={l}
+
+*---Gain boost stage---
+
+M10x 6ax 3ax 5x 5x CMOSP W={w5} L={l}
+M11x 6bx 3bx 5x 5x CMOSP W={w5} L={l}
+M12x 6ax 1gx 0 0 CMOSN W={w6} L={l}
+M13x 6bx 1gx 0 0 CMOSN W={w6} L={l}
+
+*---Biasing circuit---
+
+M14x 1gx 1gx 0 0 CMOSN W={w7} L={l}
+M15x 2x 2x 1gx 0 CMOSN W={w8} L={l}
+M16x 3x 3x 4x 5 CMOSP W={w9} L={l}
+M17x 4x 4x 5x 5 CMOSP W={w10} L={l}
+
+Irefx 3x 2x 58.1671n
+
+*---External capacitors---
+
+CE1x 3ax 0 1f
+CE2x 3bx 0 1f
+CL1x 6ax 0 0.1f
+CL2x 6bx 0 0.1f
+Cc1x 2ax 6a 25f
+Cc2x 2bx 6b 25f
+
+*---Source voltages for different analysis types---
+
+Vin1x 1ax 0 ac sin(0.56 2m 10k)
+Vin2x 0 1bx ac sin(0.56 2m 10k)
+*Vin1 1a 0 pulse(0 1 0.1m 1n 1n 5 5)
+*Vin2 1a 1b 0
+*Vin1 1a 0 0.56
+
+
+
+.param vdd=2.5
+.param l=0.35u
+.param w0=5.5u
+.param w1=10.33u
+.param w2=5.8u
+.param w3=1.0u
+.param w4=0.3u
+.param w5=0.7u
+.param w6=15.4u
+.param w7=5.5u
+.param w8=3u
+.param w9=17.988u
+.param w10=0.8616u
+
+*.op
+.ac dec 100 1 100g
+*(V(6a)-V(6b))/(V(1a)-V(1b))/((V(6ax)-V(6bx))/(V(1ax)))
+*.tf V(6a) Vin1
+*.tran 4ms 6ms 0.1ms
+*.dc Vin1 0 2.5 0.1
+*.temp 0 27 100
+
